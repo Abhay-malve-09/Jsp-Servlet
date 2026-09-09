@@ -1,0 +1,352 @@
+package com.rays.model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.mysql.cj.jdbc.JdbcConnection;
+import com.rays.bean.BranchBean;
+import com.rays.bean.VehicleBean;
+import com.rays.util.JDBCDataSource;
+
+public class VehicleModel {
+
+//	public void create() throws Exception{
+//
+//		Connection c = null;
+//
+//		try {
+//
+//			c = JDBCDataSource.getConnection();
+//
+//			c.setAutoCommit(false);
+//
+//			PreparedStatement pstmt = c.prepareStatement("create table vehicle" + "(id bigInt primary key,"
+//					+ "vehicleName varchar(45)," + "model varchar(45)," + "color varchar(45)," + "price double)");
+//
+//			int i = pstmt.executeUpdate();
+//
+//			c.commit();
+//
+//			System.out.println("table created successfully: " + i);
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			JDBCDataSource.trnRollBack(c);
+//
+//		} finally {
+//			JDBCDataSource.closeConnection(c);
+//		}
+//	}
+	
+	public int nextPk() throws SQLException {
+		
+		Connection c=  null;
+		int pk = 0;
+		
+		try {
+			
+			c = JDBCDataSource.getConnection();
+			
+			PreparedStatement p =  c.prepareStatement("select max(id) from vehicle");
+			
+			ResultSet rs = p.executeQuery();
+			
+			while(rs.next()) {
+				pk = rs.getInt(1);
+			}
+			
+		} catch (Exception e) {
+		   e.printStackTrace();
+		   
+		} finally {
+			JDBCDataSource.closeConnection(c);
+		}
+		return pk + 1;
+		
+		
+	}
+	
+	public void add(VehicleBean bean) throws SQLException {
+		
+		Connection c = null;
+		
+		VehicleBean existBean = findByVehicleName(bean.getVehicleName());
+
+		int pk = 0;
+		
+		if (existBean != null) {
+			throw new RuntimeException("vehicle already exist");
+		}
+		
+		try {
+			
+			pk = nextPk();
+			
+			c = JDBCDataSource.getConnection();
+			
+			c.setAutoCommit(false);
+			
+			PreparedStatement pstmt = c.prepareStatement("insert into vehicle values(?, ?, ?, ?, ?)");
+			
+			pstmt.setInt(1, pk);
+			pstmt.setString(2, bean.getVehicleName());
+			pstmt.setString(3, bean.getModel());
+			pstmt.setString(4, bean.getColor());
+			pstmt.setDouble(5, bean.getPrice());
+			
+			int i = pstmt.executeUpdate();
+			
+			c.commit();
+			
+			System.out.println("record inserted successfully: " + i);
+
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			JDBCDataSource.trnRollBack(c);
+			
+		} finally {
+			JDBCDataSource.closeConnection(c);
+		}
+	}
+	
+	public void update(VehicleBean bean) throws Exception{
+		
+		Connection c =  null;
+		
+		try {
+			
+			c = JDBCDataSource.getConnection();
+			
+			c.setAutoCommit(false);
+			
+			PreparedStatement p = c.prepareStatement("update vehicle set vehicleName = ?, modal = ?, color=?, price = ? whereid = ?");
+
+			p.setString(1, bean.getVehicleName());
+			p.setString(2, bean.getModel());
+			p.setString(3, bean.getColor());
+			p.setDouble(4, bean.getPrice());
+			p.setLong(5, bean.getId());
+			
+			int i = p.executeUpdate();
+			
+			c.commit();
+			
+			System.out.println("record successfully updted: " + i);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			JDBCDataSource.trnRollBack(c);
+		} finally {
+			JDBCDataSource.closeConnection(c);
+		}
+	}
+	
+	public void search() throws Exception {
+		
+		Connection c = null;
+		
+		try {
+			
+			c = JDBCDataSource.getConnection();
+			
+			c.setAutoCommit(false);
+			
+			PreparedStatement p = c.prepareStatement("select * from vehicle");
+			
+			ResultSet rs = p.executeQuery();
+			
+			while (rs.next()) {
+				
+				System.out.println(rs.getLong("id"));
+				System.out.println(rs.getLong("vehicleName"));
+				System.out.println(rs.getString("model"));
+				System.out.println(rs.getString("color"));
+				System.out.println(rs.getDouble("price"));
+				
+				System.out.println("-----------------");
+				
+			}
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			JDBCDataSource.trnRollBack(c);
+			
+		} finally {
+			JDBCDataSource.closeConnection(c);
+		}
+		
+	}
+	
+	public void delete(int id) throws Exception {
+		
+		Connection c = null;
+		
+		try {
+			
+			c = JDBCDataSource.getConnection();
+			
+			c.setAutoCommit(false);
+			
+			PreparedStatement p = c.prepareStatement("delete from vehicle where id = ?");
+			
+			p.setLong(1, id);
+			
+			int i = p.executeUpdate();
+			
+			c.commit();
+			
+			System.out.println("record deleted successfully: " + i);
+			
+		} catch (Exception e) {
+          e.printStackTrace();
+          JDBCDataSource.trnRollBack(c);
+          
+		} finally {
+			
+			JDBCDataSource.closeConnection(c);
+		}
+	}
+	
+	public VehicleBean findByPk(long id) throws Exception {
+		
+		Connection c = null;
+		VehicleBean bean = null;
+		
+		try {
+			
+			c = JDBCDataSource.getConnection();
+			
+			c.setAutoCommit(false);
+			
+			PreparedStatement p = c.prepareStatement("select * from vehicle where id = ?");
+			
+			p.setLong(1, id);
+			
+			ResultSet rs = p.executeQuery();
+			
+			while(rs.next()) {
+				bean = new VehicleBean();
+				bean.setId(rs.getLong("id"));
+				bean.setVehicleName(rs.getString("vehicleName"));
+				bean.setModel(rs.getString("model"));
+				bean.setColor(rs.getString("color"));
+				bean.setPrice(rs.getDouble("price"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			JDBCDataSource.trnRollBack(c);
+	
+		} finally {
+			JDBCDataSource.closeConnection(c);
+		}
+		
+		return bean;
+	}
+	
+	public VehicleBean findByVehicleName(String vehicleName) throws SQLException {
+
+		Connection c = null;
+
+		VehicleBean bean = null;
+
+		try {
+
+			c = JDBCDataSource.getConnection();
+
+			PreparedStatement pstmt = c.prepareStatement("select * from vehicle  where vehicleName = ?");
+
+			pstmt.setString(1, vehicleName);
+			ResultSet rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				bean = new VehicleBean();
+				bean.setId(rs.getInt("id"));
+				bean.setVehicleName(rs.getString("vehicleName"));
+				bean.setModel(rs.getString("model"));
+				bean.setColor(rs.getString("color"));
+				bean.setPrice(rs.getDouble("price"));
+				}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			JDBCDataSource.closeConnection(c);
+		}
+		return bean;
+	}
+
+	public List<VehicleBean> search(VehicleBean bean, int pageNo, int pageSize) {
+		
+		Connection c = null;
+		
+		List<VehicleBean> list = new ArrayList<VehicleBean>();
+		
+		try {
+			
+			StringBuffer sql = new StringBuffer("select * from vehicle where 1=1 ");
+			
+			if(bean != null) {
+				
+				if (bean.getVehicleName() != null && bean.getVehicleName().length() > 0) {
+					sql.append("and VehicleName like '" + bean.getVehicleName() + "%' ");
+			 
+				}
+				
+				if (bean.getModel() != null && bean.getModel().length() > 0) {
+					sql.append("and Model like '" + bean.getModel() + "%' ");
+			
+				}
+				
+				if (bean.getColor() != null && bean.getColor().length()> 0) {
+					sql.append("and Color like '" + bean.getColor() + "%' ");
+						
+					}
+				
+				if (bean.getPrice() != 0) {
+					sql.append("and Price like '" + bean.getPrice() + "%' ");
+				}
+			}
+			
+			if (pageSize > 0) {
+				
+				int index = (pageNo - 1) * pageSize;
+				sql.append("limit " + index + "," + pageSize);
+				
+			}
+			
+			c = JDBCDataSource.getConnection();
+			
+			System.out.println("sql search query ===> " + sql.toString());
+			
+			PreparedStatement p = c.prepareStatement(sql.toString());
+			
+			ResultSet rs = p.executeQuery();
+			
+			while (rs.next()) {
+				bean = new VehicleBean();
+				bean.setId(rs.getLong("id"));
+				bean.setVehicleName(rs.getString("vehicleName"));
+				bean.setModel(rs.getString("model"));
+				bean.setColor(rs.getString("color"));
+				bean.setPrice(rs.getDouble("price"));
+				list.add(bean);
+				
+			}
+			
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		} finally {
+			JDBCDataSource.closeConnection(c);
+		}
+		
+		return list;
+	}
+}

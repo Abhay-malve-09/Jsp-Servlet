@@ -1,0 +1,99 @@
+package com.rays.ctl;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.rays.bean.UserBean;
+import com.rays.model.UserModel;
+import com.rays.util.ServletUtility;
+
+//@WebServlet("/UserCtl")
+@WebServlet("/UserCtl.do")
+public class UserCtl extends HttpServlet {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		System.out.println("this is doGet() method");
+		
+		UserModel model = new UserModel();
+		UserBean bean = new UserBean();
+		String id = request.getParameter("id");
+
+		if (id != null) {
+			try {
+				bean = model.findByPk(Integer.parseInt(id));
+				request.setAttribute("bean", bean);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+
+		ServletUtility.forward("UserView.jsp", request, response);
+
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		System.out.println("this is doPost() method");
+		
+		String op = request.getParameter("operation");
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		UserBean bean = new UserBean();
+		UserModel model = new UserModel();
+
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+		String login = request.getParameter("login");
+		String password = request.getParameter("password");
+		String dob = request.getParameter("dob");
+
+//		System.out.println(firstName + "\n" + lastName + "\n" + login + "\n" + password + "\n" + dob);
+
+		try {
+
+			bean.setFirstName(firstName);
+			bean.setLastName(lastName);
+			bean.setLoginId(login);
+			bean.setPassword(password);
+			bean.setDob(sdf.parse(dob));
+			
+//			model.add(bean);
+
+//			request.setAttribute("successMsg", "user saved successfully");
+
+			if (op.equals("save")) {
+				
+				model.add(bean);
+				request.setAttribute("successMsg", "user saved successfully");
+				
+			} else if (op.equals("update")) {
+				
+				bean.setId(Integer.parseInt(request.getParameter("id")));
+				model.update(bean);
+				request.setAttribute("successMsg", "user updated successfully");
+				
+			}
+			
+		} catch (Exception e) {
+			
+			request.setAttribute("errorMsg", "loginId already exist");
+			e.printStackTrace();
+			
+		}
+
+		ServletUtility.forward("UserView.jsp", request, response);
+
+	}
+
+}

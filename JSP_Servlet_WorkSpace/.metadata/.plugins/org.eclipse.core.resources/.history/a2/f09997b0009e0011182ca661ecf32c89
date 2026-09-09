@@ -1,0 +1,103 @@
+package com.rays.model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.rays.bean.VehicleBean;
+import com.rays.util.JDBCDataSource;
+
+public class VehicleModel {
+
+//	public void create() throws Exception{
+//
+//		Connection c = null;
+//
+//		try {
+//
+//			c = JDBCDataSource.getConnection();
+//
+//			c.setAutoCommit(false);
+//
+//			PreparedStatement pstmt = c.prepareStatement("create table vehicle" + "(id bigInt primary key,"
+//					+ "vehicleName varchar(45)," + "model varchar(45)," + "color varchar(45)," + "price double)");
+//
+//			int i = pstmt.executeUpdate();
+//
+//			c.commit();
+//
+//			System.out.println("table created successfully: " + i);
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			JDBCDataSource.trnRollBack(c);
+//
+//		} finally {
+//			JDBCDataSource.closeConnection(c);
+//		}
+//	}
+	
+	public int nextPk() throws SQLException {
+		
+		Connection c=  null;
+		int pk = 0;
+		
+		try {
+			
+			c = JDBCDataSource.getConnection();
+			
+			PreparedStatement p =  c.prepareStatement("select max(id) from vehicle");
+			
+			ResultSet rs = p.executeQuery();
+			
+			while(rs.next()) {
+				pk = rs.getInt(1);
+			}
+			
+		} catch (Exception e) {
+		   e.printStackTrace();
+		   
+		} finally {
+			JDBCDataSource.closeConnection(c);
+		}
+		return pk = 1;
+		
+		
+	}
+	
+	public void add(VehicleBean bean) {
+		
+		Connection c = null;
+		
+		int pk = 0;
+		
+		try {
+			
+			pk = nextPk();
+			
+			c = JDBCDataSource.getConnection();
+			
+			c.setAutoCommit(false);
+			
+			PreparedStatement pstmt = c.prepareStatement("insert into vehicle values(?, ?, ?, ?, ?)");
+			
+			pstmt.setInt(1, pk);
+			pstmt.setString(2, bean.getVehicleName());
+			pstmt.setString(3, bean.getModel());
+			pstmt.setString(4, bean.getColor());
+			pstmt.setDouble(5, bean.getPrice());
+			
+			int i = pstmt.executeUpdate();
+			
+			c.commit();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			JDBCDataSource.trnRollBack(c);
+			
+		} finally {
+			JDBCDataSource.closeConnection(c);
+		}
+	}
+}

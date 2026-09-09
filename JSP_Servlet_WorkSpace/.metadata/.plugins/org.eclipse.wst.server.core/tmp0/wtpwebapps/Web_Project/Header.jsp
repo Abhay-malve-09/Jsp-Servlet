@@ -1,0 +1,56 @@
+<%@page import="com.rays.bean.UserBean"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<%
+	UserBean user = (UserBean) session.getAttribute("user");
+	%>
+
+	<%
+	if (user != null) {
+	%>
+
+	<h2><%="Hii, " + user.getFirstName()%></h2>
+
+    <a href=ProductListCtl>Product List</a> |
+    <a href=ProductCtl>Add Product</a> |
+    
+  <!--   <a href="UserListCtl">User List</a> |
+    <a href="UserCtl">Add User</a> | -->
+    
+    <a href="UserListCtl.do">User List</a> |
+	<a href="UserCtl.do">Add User</a> |
+    <a href=BranchListCtl>Branch List</a> |
+    <a href=BranchCtl>Add Branch</a> |
+    
+  <!--   <a href=VehicleListCtl>Vehicle List</a> |    
+    <a href=VehicleCtl>Add Vehicle</a> |     -->
+    
+    <a href=VehicleListCtl.do>Vehicle List</a> |    
+    <a href=VehicleCtl.do>Add Vehicle</a> |    
+	<a href="LoginCtl?operation=logout">logout</a> |
+
+	<%
+	} else {
+	%>
+
+	<h2>Hii, Guest</h2>
+
+	<a href="LoginCtl">Login</a> |
+	<a href="UserRegistrationCtl">SignUp</a> |
+
+	<%
+	}
+	%>
+	<a href="WelcomeCtl">Welcome</a>
+	<hr>
+
+
+</body>
+</html>

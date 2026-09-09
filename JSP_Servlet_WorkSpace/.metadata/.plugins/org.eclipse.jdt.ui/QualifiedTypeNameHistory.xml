@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="javax.servlet.RequestDispatcher"/>
+    <fullyQualifiedTypeName name="org.eclipse.jdt.internal.compiler.ast.SuperReference"/>
+    <fullyQualifiedTypeName name="com.rays.exception.DuplicateRecordException"/>
+    <fullyQualifiedTypeName name="com.rays.exception.RecordNotFoundException"/>
+    <fullyQualifiedTypeName name="com.rays.exception.ApplicationException"/>
+    <fullyQualifiedTypeName name="com.rays.exception.DataBaseException"/>
+    <fullyQualifiedTypeName name="java.util.ResourceBundle"/>
+    <fullyQualifiedTypeName name="com.mchange.v2.c3p0.ComboPooledDataSource"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpSession"/>
+    <fullyQualifiedTypeName name="com.rays.bean.UserBean"/>
+    <fullyQualifiedTypeName name="com.rays.model.UserModel"/>
+    <fullyQualifiedTypeName name="com.rays.util.InputValidatorUtility"/>
+    <fullyQualifiedTypeName name="com.rays.ctl.UserRegistrationCtl"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpServletRequest"/>
+    <fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
+    <fullyQualifiedTypeName name="com.rays.model.BranchModel"/>
+    <fullyQualifiedTypeName name="com.rays.util.ServletUtility"/>
+    <fullyQualifiedTypeName name="java.lang.Exception"/>
+    <fullyQualifiedTypeName name="com.mysql.cj.jdbc.JdbcConnection"/>
+    <fullyQualifiedTypeName name="java.sql.Connection"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="java.lang.StringBuffer"/>
+    <fullyQualifiedTypeName name="javax.servlet.annotation.WebServlet"/>
+    <fullyQualifiedTypeName name="com.rays.ctl.VehicleListCtl"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpServlet"/>
+    <fullyQualifiedTypeName name="com.rays.util.JDBCDataSource"/>
+    <fullyQualifiedTypeName name="com.rays.bean.VehicleBean"/>
+</qualifiedTypeNameHistroy>

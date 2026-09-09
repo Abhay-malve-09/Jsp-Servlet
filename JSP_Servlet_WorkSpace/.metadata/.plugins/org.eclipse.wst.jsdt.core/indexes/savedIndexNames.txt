@@ -1,0 +1,8 @@
+INDEX VERSION 1.4+D:\daataa\RaysSoftware\JSP_Servlet_WorkSpace\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+2803804213.index
+126661708.index
+3011896835.index
+3223866381.index
+743458506.index
+3069477276.index
+403387313.index

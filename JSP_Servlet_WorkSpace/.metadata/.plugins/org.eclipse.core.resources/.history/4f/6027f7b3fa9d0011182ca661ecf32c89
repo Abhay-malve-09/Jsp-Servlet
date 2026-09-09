@@ -1,0 +1,37 @@
+package com.rays.model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+import com.rays.util.JDBCDataSource;
+
+public class VehicleModel {
+
+	public void create() {
+
+		Connection c = null;
+
+		try {
+
+			c = JDBCDataSource.getConnection();
+
+			c.setAutoCommit(false);
+
+			PreparedStatement pstmt = c.prepareStatement("create table vehicle" + "(id bigInt primary key,"
+					+ "vehicleName varchar(45)," + "model varchar(45)," + "color varchar(45)," + "price double)");
+
+			int i = pstmt.executeUpdate();
+
+			c.commit();
+
+			System.out.println("table created successfully: " + i);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			JDBCDataSource.trnRollBack(c);
+
+		} finally {
+			JDBCDataSource.closeConnection(c);
+		}
+	}
+}
